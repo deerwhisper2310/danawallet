@@ -6,6 +6,7 @@ import 'package:danawallet/screens/home/wallet/spend/fee_selection.dart';
 import 'package:danawallet/screens/home/wallet/spend/spend_skeleton.dart';
 import 'package:danawallet/states/chain_state.dart';
 import 'package:danawallet/states/wallet_state.dart';
+import 'package:danawallet/widgets/buttons/footer/footer_button.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -20,13 +21,14 @@ class AmountSelectionScreenState extends State<AmountSelectionScreen> {
   final TextEditingController amountController = TextEditingController();
   String? _amountErrorText;
 
-  Future<void> onContinue() async {
+  Future<void> onContinue(BigInt availableBalance) async {
     setState(() {
       _amountErrorText = null;
     });
+
+    final BigInt amount;
     try {
-      RecipientForm().amount =
-          ApiAmount(field0: BigInt.from(int.parse(amountController.text)));
+      amount = BigInt.from(int.parse(amountController.text));
     } on FormatException {
       setState(() {
         _amountErrorText = 'Invalid amount';
@@ -34,7 +36,14 @@ class AmountSelectionScreenState extends State<AmountSelectionScreen> {
       return;
     }
 
-    // todo: verify amount
+    if (amount > availableBalance) {
+      setState(() {
+        _amountErrorText = 'Not enough available funds';
+      });
+      return;
+    }
+
+    RecipientForm().amount = ApiAmount(field0: amount);
 
     // get fee rates, these are needed for the next screen
     // todo: make a chainstate, get the fee rates from the chainstate instead
@@ -151,14 +160,10 @@ class AmountSelectionScreenState extends State<AmountSelectionScreen> {
           const SizedBox(
             height: 10.0,
           ),
-          BitcoinButtonFilled(
-            body: Text(
-              'Proceed to fee selection',
-              style: BitcoinTextStyle.body2(Bitcoin.neutral1),
-            ),
-            onPressed: onContinue,
-            cornerRadius: 5.0,
-          )
+          FooterButton(
+            title: 'Proceed to fee selection',
+            onPressed: () => onContinue(availableBalance),
+          ),
         ],
       ),
     );

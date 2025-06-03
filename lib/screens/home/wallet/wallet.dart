@@ -1,13 +1,14 @@
 import 'package:bitcoin_ui/bitcoin_ui.dart';
+import 'package:danawallet/constants.dart';
 import 'package:danawallet/generated/rust/api/structs.dart';
 import 'package:danawallet/global_functions.dart';
+import 'package:danawallet/screens/home/wallet/receive/show_address.dart';
 import 'package:danawallet/screens/home/wallet/spend/choose_recipient.dart';
 import 'package:danawallet/states/scan_progress_notifier.dart';
 import 'package:danawallet/states/wallet_state.dart';
 import 'package:danawallet/widgets/receive_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:barcode_widget/barcode_widget.dart';
 
 class WalletScreen extends StatefulWidget {
   const WalletScreen({super.key});
@@ -18,35 +19,6 @@ class WalletScreen extends StatefulWidget {
 
 class WalletScreenState extends State<WalletScreen> {
   bool hideAmount = false;
-
-  void _showReceiveDialog(BuildContext context, String address) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: const Text('Your address'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              SingleChildScrollView(
-                child: BarcodeWidget(data: address, barcode: Barcode.qrCode()),
-              ),
-              const SizedBox(height: 20),
-              SelectableText(address),
-            ],
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: const Text('Close'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
 
   Widget buildScanProgress(double scanProgress) {
     return Row(
@@ -210,6 +182,7 @@ class WalletScreenState extends State<WalletScreen> {
         children: [
           Expanded(
             child: BitcoinButtonFilled(
+              tintColor: danaBlue,
               body: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 Text(
                   'Pay  ',
@@ -230,9 +203,10 @@ class WalletScreenState extends State<WalletScreen> {
           ),
           const SizedBox(width: 10),
           ReceiveWidget(
-            onPressed: () {
-              _showReceiveDialog(context, address);
-            },
+            onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => ShowAddressScreen(address: address))),
           )
         ],
       ),

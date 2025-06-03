@@ -1,5 +1,6 @@
 import 'package:bitcoin_ui/bitcoin_ui.dart';
 import 'package:danawallet/constants.dart';
+import 'package:danawallet/data/enums/network.dart';
 import 'package:danawallet/global_functions.dart';
 import 'package:danawallet/repositories/settings_repository.dart';
 import 'package:danawallet/screens/onboarding/introduction.dart';
@@ -139,16 +140,18 @@ Without a backup, your funds willl be lost!""");
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
-          BitcoinButtonOutlined(
-            title: 'Show seed phrase',
-            onPressed: () async {
-              const title = 'Backup seed phrase';
-              final text = await walletState.getSeedPhraseFromSecureStorage() ??
-                  'Seed phrase unknown! Did you import from keys?';
+          if (isDevEnv())
+            BitcoinButtonOutlined(
+              title: 'Show seed phrase',
+              onPressed: () async {
+                const title = 'Backup seed phrase';
+                final text =
+                    await walletState.getSeedPhraseFromSecureStorage() ??
+                        'Seed phrase unknown! Did you import from keys?';
 
-              showAlertDialog(title, text);
-            },
-          ),
+                showAlertDialog(title, text);
+              },
+            ),
           if (isDevEnv())
             BitcoinButtonOutlined(
                 title: 'Set scan height',

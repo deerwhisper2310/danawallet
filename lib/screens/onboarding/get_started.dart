@@ -1,5 +1,5 @@
 import 'package:bitcoin_ui/bitcoin_ui.dart';
-import 'package:danawallet/constants.dart';
+import 'package:danawallet/data/enums/network.dart';
 import 'package:danawallet/global_functions.dart';
 import 'package:danawallet/repositories/settings_repository.dart';
 import 'package:danawallet/screens/home/home.dart';
@@ -11,11 +11,9 @@ import 'package:danawallet/states/wallet_state.dart';
 import 'package:danawallet/widgets/buttons/footer/footer_button.dart';
 import 'package:danawallet/widgets/buttons/footer/footer_button_outlined.dart';
 import 'package:danawallet/widgets/icons/circular_icon.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:sizer/sizer.dart';
-import 'package:url_launcher/url_launcher_string.dart';
 
 class GetStartedScreen extends StatelessWidget {
   const GetStartedScreen({super.key});
@@ -98,7 +96,7 @@ class GetStartedScreen extends StatelessWidget {
               height: Adaptive.h(5),
             ),
             const CircularIcon(
-                iconPath: "assets/icons/contact.svg",
+                iconPath: "assets/icons/rocket-large.svg",
                 iconHeight: 44,
                 radius: 50),
             const SizedBox(
@@ -108,29 +106,6 @@ class GetStartedScreen extends StatelessWidget {
               "Get started!",
               style: BitcoinTextStyle.title2(Colors.black)
                   .copyWith(height: 1.8, fontFamily: 'Inter'),
-            ),
-            const SizedBox(
-              height: 10,
-            ),
-            RichText(
-              textAlign: TextAlign.center,
-              text: TextSpan(children: [
-                TextSpan(
-                    text:
-                        "To learn more about our privacy-preserving addresses,",
-                    style: BitcoinTextStyle.body3(Bitcoin.neutral7).copyWith(
-                      fontFamily: 'Inter',
-                    )),
-                TextSpan(
-                  text: ' Click here',
-                  style: BitcoinTextStyle.body3(Colors.blue).copyWith(
-                    fontFamily: 'Inter',
-                  ),
-                  recognizer: TapGestureRecognizer()
-                    ..onTap = () => launchUrlString(
-                        'https://silentpayments.xyz/docs/explained/'),
-                ),
-              ]),
             )
           ],
         ),
